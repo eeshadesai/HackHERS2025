@@ -58,7 +58,7 @@ def chat():
 
 
    messages = [
-       {"role": "system", "content": "You are a rehab specialist. You give a diagnosis based on symptoms or if given an injury, create a plan to heal."},
+       {"role": "system", "content": "You are a rehab specialist. You give a diagnosis based on symptoms or if given an injury, create a treatment plan."},
        {"role": "user", "content": user_message},
    ]
 
