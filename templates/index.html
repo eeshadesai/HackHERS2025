@@ -158,21 +158,21 @@
    </div>
 
    <!-- Tab Content Section -->
-   <div id="chat-content" class="tab-content active-content">
+   <div id="symptoms-chat-content" class="tab-content active-content">
        <h2>Symptoms</h2>
-       <div id="chat-box"></div>
-       <input type="text" id="user-input" placeholder="What symptoms do you have?">
-       <button onclick="sendMessage()">Send</button>
+       <div id="symptoms-chat-box"></div>
+       <input type="text" id="symptoms-user-input" placeholder="What symptoms do you have?">
+       <button onclick="sendMessage('symptoms')">Send</button>
    </div>
 
-   <div id="page2-content" class="tab-content">
+   <div id="treatment-chat-content" class="tab-content">
        <h2>Treatment Plan</h2>
-       <div id="chat-box"></div>
-       <input type="text" id="user-input" placeholder="Describe your pain level, etc.">
-       <button onclick="sendMessage()">Send</button>
+       <div id="treatment-chat-box"></div>
+       <input type="text" id="treatment-user-input" placeholder="Get a treatment plan for your injury.">
+       <button onclick="sendMessage('treatment')">Send</button>
    </div>
 
-   <div id="page3-content" class="tab-content">
+   <div id="progress-content" class="tab-content">
        <h2>Progress Tracker</h2>
        
        <!-- Editable Progress Table -->
@@ -201,18 +201,21 @@
        </div>
    </div>
 
-<script>
-    function sendMessage() {
-        let userInput = document.getElementById("user-input").value;
+   <script>
+    function sendMessage(type) {
+        let userInputField = document.getElementById(`${type}-user-input`);
+        let chatBox = document.getElementById(`${type}-chat-box`);
+        let userInput = userInputField.value;
+
         if (!userInput) return;
-        let chatBox = document.getElementById("chat-box");
-        chatBox.innerHTML +=
-        `
+
+        chatBox.innerHTML += `
             <div class="message user">
                 You: ${userInput}
             </div>
         `;
-        document.getElementById("user-input").value = "";
+        userInputField.value = "";
+
         fetch("/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -220,8 +223,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            let botMessage =
-            `
+            let botMessage = `
                 <div class='message bot'>
                     Bot: ${data.response}
                 </div>
