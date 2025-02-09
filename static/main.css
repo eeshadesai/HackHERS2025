@@ -14,6 +14,12 @@
     align-items: center;
 }
 
+input::placeholder {
+
+    color: #d3d3d3;
+  
+} 
+
 body{
     min-height: 100vh;
     background: #EEE4E1;
