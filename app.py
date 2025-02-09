@@ -1,11 +1,15 @@
 import os
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from dotenv import load_dotenv
+from groq import Groq
 
 # Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
+
+client = Groq(api_key="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")
+
 
 # Secret key for session management (Change this in production)
 app.secret_key = os.getenv("SECRET_KEY", "your_default_secret_key")
@@ -44,6 +48,29 @@ def logout():
     """Logs the user out and redirects to the login page."""
     session.pop('logged_in', None)  # Remove session data
     return redirect(url_for('login'))
+
+@app.route("/chat", methods=["POST"])
+def chat():
+   user_message = request.json.get("message")
+  
+   if not user_message:
+       return jsonify({"error": "No message received"}), 400
+
+
+   messages = [
+       {"role": "system", "content": "You are a rehab specialist. You give a diagnosis based on symptoms or if given an injury, create a plan to heal."},
+       {"role": "user", "content": user_message},
+   ]
+
+
+   chat_completion = client.chat.completions.create(
+       messages=messages,
+       model="llama-3.3-70b-versatile",
+   )
+
+
+   response = chat_completion.choices[0].message.content
+   return jsonify({"response": response})
 
 if __name__ == "__main__":
     app.run(debug=True)
